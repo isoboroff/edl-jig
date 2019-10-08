@@ -1,15 +1,14 @@
 # OSIRRC 2019 Jig
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3246803.svg)](https://doi.org/10.5281/zenodo.3246803)
 
-This is the jig for the [SIGIR 2019 Open-Source IR Replicability Challenge (OSIRRC 2019)](https://osirrc.github.io/osirrc2019/). Check out the [OSIRRC 2019 image library](https://github.com/osirrc/osirrc2019-library) for a list of images that have been contributed to this exercise.
+This is the jig for the [Text Analysis Conference 2019 Entity Detection and Linking Task (TAC 2019 EDL)](http://nlp.cs.rpi.edu/kbp/2019/).  It is based on a setup for Dockerized IR experiments built for the [SIGIR 2019 Open-Source IR Replicability Challenge (OSIRRC 2019)](https://osirrc.github.io/osirrc2019/).
 
 What's a [jig](https://en.wikipedia.org/wiki/Jig_(tool))?
 
 
-To get started, clone the jig, and then download + compile `trec_eval` (inside the `jig` directory) with the following command:
+To get started, clone the jig, and then download `neleval` (inside the `jig` directory) with the following command:
 
 ```
-git clone https://github.com/usnistgov/trec_eval.git && make -C trec_eval
+git clone https://github.com/wikilinks/neleval.git
 ```
 
 Make sure the Docker Python package is installed (via pip, conda, etc.):
@@ -19,21 +18,22 @@ pip install -r requirements.txt
 
 Make sure the Docker daemon is running.
 
-For common test collections, [topics](topics/) and [qrels](qrels/) are already checked into this repo.
+### For common test collections, [topics](topics/) and [qrels](qrels/) are already checked into this repo.
+# Will we ship truth data, or some dev/test data?  That should go here.
 
-To test the jig with an Anserini image using default parameters, try:
+To test the jig with a simple demo image using default parameters, first obtain the sample Ontonotes data from http://nlp.cs.rpi.edu/kbp/2019/data.html.  Lay it out like this.  Then, try:
 
 ```
 python run.py prepare \
-    --repo osirrc2019/anserini \
+    --repo isoboroff/edl-jig-test \
     --collections [name]=[path]=[format] ...
 ```
 
 then
 
 ```
-python run.py search \
-    --repo osirrc2019/anserini \
+python run.py edl \
+    --repo isoboroff/edl-jig-test \
     --collection [name] \
     --topic /path/to/topic \
     --output /path/to/output \
