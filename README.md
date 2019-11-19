@@ -77,28 +77,24 @@ Options with `none` as the default are required.
 
 | Option Name | Type | Default | Example | Description
 | --- | --- | --- | --- | ---
-| `--repo` | `string` | `none` | `--repo osirrc2019/anserini` | the repo on Docker Hub
+| `--repo` | `string` | `none` | `--repo isoboroff/edl-jig-test` | the repo on Docker Hub
 | `--tag` | `string` | `latest` | `--tag latest` | the tag on Docker Hub
 | `--collections` | `[name]=[path] ...` | `none` | `--collections tac2019=/path/to/tac2019 ...` | the collections to use
 | `--save_to_snapshot` | `string` | `save` | `--save_to_snapshot tac2019-exp1` | used to determine the tag of the snapshotted image after indexing
 | `--opts` | `[key]=[value] ...` | `none` | `--opts index_args="-storeRawDocs"` | extra options passed to the index script
 | `--version` | `string` | `none` | `--version 3b16584a7e3e7e3b93642a95675fc38396581bdf` | the version string passed to the init script
 
-### Command Line Options - search
+### Command Line Options - edl
 
-`python run.py search <options>`
+`python run.py edl <options>`
 
 | Option Name | Type | Default | Example | Description
 | --- | --- | --- | --- | ---
-| `--repo` | `string` | `none` | `--repo osirrc2019/anserini` | the repo on Docker Hub
+| `--repo` | `string` | `none` | `--repo isoboroff/edl-jig-test` | the repo on Docker Hub
 | `--tag` | `string` | `latest` | `--tag latest` | the tag on Docker Hub
-| `--collection` | `string` | `none` | `--collection robust04` | the collections to index
-| `--load_from_snapshot` | `string` | `save` | `--load_from_snapshot robust04-exp1` | used to determine the tag of the snapshotted image to search from
-| `--topic` | `string` | `none` | `--topic topics/topics.robust04.301-450.601-700.txt` | the path of the topic file
-| `--topic_format` | `string` | `trec` | `--topic_format trec` | the format of the topic file
-| `--top_k` | `int` | `1000` | `--top_k 500` | the number of results for top-k retrieval
+| `--collection` | `string` | `none` | `--collection tac2019` | the collections to index
+| `--load_from_snapshot` | `string` | `save` | `--load_from_snapshot tac2019-exp1` | used to determine the tag of the snapshotted image to search from
 | `--output` | `string` | `none` | `--output $(pwd)/output` | the output path for run files
-| `--qrels` | `string` | `none` | `--qrels $(pwd)/qrels/qrels.robust2004.txt` | the qrels file for evaluation
 | `--opts` | `[key]=[value] ...` | `none` | `--opts search_args="-bm25"` | extra options passed to the search script
 | `--timings` | `flag` | `false` | `--timings` | print timing info (requires the `time` package, or `bash`, to be installed in Dockerfile)
 | `--measures` | `string ...` | `"num_q map P.30"` | `--measures recall.1000 map` | the measures for trec_eval
