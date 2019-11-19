@@ -1,4 +1,4 @@
-# OSIRRC 2019 Jig
+# TAC EDL 2019 Jig
 
 This is the jig for the [Text Analysis Conference 2019 Entity Detection and Linking Task (TAC 2019 EDL)](http://nlp.cs.rpi.edu/kbp/2019/).  It is based on a setup for Dockerized IR experiments built for the [SIGIR 2019 Open-Source IR Replicability Challenge (OSIRRC 2019)](https://osirrc.github.io/osirrc2019/).
 
@@ -18,15 +18,19 @@ pip install -r requirements.txt
 
 Make sure the Docker daemon is running.
 
-### For common test collections, [topics](topics/) and [qrels](qrels/) are already checked into this repo.
-# Will we ship truth data, or some dev/test data?  That should go here.
+Information on different datasets is in the directory `collections`.  A collection has three files:
+ - `OntoNotes.txt`: explains what the collection is and where to get it from.
+ - `OntoNotes.tree`: the output of [tree](http://mama.indstate.edu/users/ice/tree) on the collection directory.
+ - `OntoNotes.md5`: MD5 checksums for files listed in the .tree file.
 
-To test the jig with a simple demo image using default parameters, first obtain the sample Ontonotes data from http://nlp.cs.rpi.edu/kbp/2019/data.html.  Lay it out like this.  Then, try:
+You will need to have the collection you want to use, laid out as described in the `.tree` file.
+
+To test the jig with a simple demo image using default parameters, first obtain the sample Ontonotes data from http://nlp.cs.rpi.edu/kbp/2019/data.html.  Lay it out as in `collections/OntoNotes.tree`.  Then, try:
 
 ```
 python run.py prepare \
     --repo isoboroff/edl-jig-test \
-    --collections [name]=[path]=[format] ...
+    --collections [name]=[path] ...
 ```
 
 then
@@ -35,17 +39,12 @@ then
 python run.py edl \
     --repo isoboroff/edl-jig-test \
     --collection [name] \
-    --topic /path/to/topic \
-    --output /path/to/output \
-    --qrels /path/to/qrels
+    --output /path/to/output
 ```
 
 Change:
  - `[name]` and `[path]` to the collection name and path on the host, respectively
- - `[format]` is one of `trectext`, `trecweb`, `json`, or `warc`
- - `/path/to/topic` to the path of the topic file
  - `/path/to/output` to the desired output directory.
- - `/path/to/qrels` to the path of appropriate qrels file
  
 The output run files will appear in the argument of `--output`.
 The full command line parameters are below.
@@ -54,7 +53,7 @@ To run a container (from a saved image) that you can interact with, try:
 
 ```
 python run.py interact \
-    --repo osirrc2019/anserini \
+    --repo isoboroff/edl-jig-test \
     --tag latest
 ```
 
@@ -62,14 +61,11 @@ python run.py interact \
 
 The following collections are supported:
 
-|   Name   |                            URL                            |
-|:--------:|:---------------------------------------------------------:|
-|  core17  |          https://catalog.ldc.upenn.edu/LDC2008T19         |
-|  core18  |             https://trec.nist.gov/data/wapost/            |
-|   cw09b  |           http://lemurproject.org/clueweb09.php/          |
-|   cw12b  | http://lemurproject.org/clueweb12/ClueWeb12-CreateB13.php |
-|   gov2   | http://ir.dcs.gla.ac.uk/test_collections/gov2-summary.htm |
-| robust04 |           https://trec.nist.gov/data_disks.html           |
+|   Name      |                            URL                            |
+|:-----------:|:---------------------------------------------------------:|
+|  OntoNotes  |  http://nlp.cs.rpi.edu/kbp/2019/data.html                 |
+|  FIGER      |  http://nlp.cs.rpi.edu/kbp/2019/data.html                 |
+|  TAC 2019   |  LDC2019E79 (corpus) and LDC2019E78 (annotations)         |
 
 ## Command Line Options
 
@@ -83,8 +79,8 @@ Options with `none` as the default are required.
 | --- | --- | --- | --- | ---
 | `--repo` | `string` | `none` | `--repo osirrc2019/anserini` | the repo on Docker Hub
 | `--tag` | `string` | `latest` | `--tag latest` | the tag on Docker Hub
-| `--collections` | `[name]=[path]=[format] ...` | `none` | `--collections robust04=/path/to/robust04=trectext ...` | the collections to index
-| `--save_to_snapshot` | `string` | `save` | `--save_to_snapshot robust04-exp1` | used to determine the tag of the snapshotted image after indexing
+| `--collections` | `[name]=[path] ...` | `none` | `--collections tac2019=/path/to/tac2019 ...` | the collections to use
+| `--save_to_snapshot` | `string` | `save` | `--save_to_snapshot tac2019-exp1` | used to determine the tag of the snapshotted image after indexing
 | `--opts` | `[key]=[value] ...` | `none` | `--opts index_args="-storeRawDocs"` | extra options passed to the index script
 | `--version` | `string` | `none` | `--version 3b16584a7e3e7e3b93642a95675fc38396581bdf` | the version string passed to the init script
 
