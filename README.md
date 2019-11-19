@@ -84,9 +84,24 @@ Options with `none` as the default are required.
 | `--opts` | `[key]=[value] ...` | `none` | `--opts index_args="-storeRawDocs"` | extra options passed to the index script
 | `--version` | `string` | `none` | `--version 3b16584a7e3e7e3b93642a95675fc38396581bdf` | the version string passed to the init script
 
-### Command Line Options - edl
+### Command Line Options - train
 
-`python run.py edl <options>`
+`python run.py train <options>`
+
+| Option Name | Type | Default | Example | Description
+| --- | --- | --- | --- | ---
+| `--repo` | `string` | `none` | `--repo isoboroff/edl-jig-test` | the repo on Docker Hub
+| `--tag` | `string` | `latest` | `--tag latest` | the tag on Docker Hub
+| `--load_from_snapshot` | `string` | `save` | `--load_from_snapshot tac2019-exp1` | used to determine the tag of the snapshotted image to search from
+| `--train_split` | `string` | `none` | `--train_split train_split` | the path to the file listing the files to use for training 
+| `--validation_split` | `string` | `none` | `--validation_split valid_split` | the path to the file listing the files to use for the model validation 
+| `--model_folder` | `string` | `none` | `--model_folder $(pwd)/output` | the folder to save the model trained by the docker
+| `--gpu` | `boolean` | `False` | `--gpu True` | flag to launch docker with nvidia runtime
+| `--opts` | `[key]=[value] ...` | `none` | `--opts epochs=10` | extra options passed to the search script
+
+### Command Line Options - test
+
+`python run.py test <options>`
 
 | Option Name | Type | Default | Example | Description
 | --- | --- | --- | --- | ---
@@ -94,29 +109,12 @@ Options with `none` as the default are required.
 | `--tag` | `string` | `latest` | `--tag latest` | the tag on Docker Hub
 | `--collection` | `string` | `none` | `--collection tac2019` | the collections to index
 | `--load_from_snapshot` | `string` | `save` | `--load_from_snapshot tac2019-exp1` | used to determine the tag of the snapshotted image to search from
+| `--test_split` | `string` | `none` | `--test_split test_split` | the path to the file listing the files to use for testing
 | `--output` | `string` | `none` | `--output $(pwd)/output` | the output path for run files
 | `--opts` | `[key]=[value] ...` | `none` | `--opts search_args="-bm25"` | extra options passed to the search script
 | `--timings` | `flag` | `false` | `--timings` | print timing info (requires the `time` package, or `bash`, to be installed in Dockerfile)
 | `--measures` | `string ...` | `"num_q map P.30"` | `--measures recall.1000 map` | the measures for trec_eval
 | `--gpu` | `boolean` | `False` | `--gpu True` | flag to launch docker with nvidia runtime
-
-### Command Line Options - train
-
-`python run.py train <options>`
-
-| Option Name | Type | Default | Example | Description
-| --- | --- | --- | --- | ---
-| `--repo` | `string` | `none` | `--repo osirrc2019/anserini` | the repo on Docker Hub
-| `--tag` | `string` | `latest` | `--tag latest` | the tag on Docker Hub
-| `--load_from_snapshot` | `string` | `save` | `--load_from_snapshot robust04-exp1` | used to determine the tag of the snapshotted image to search from
-| `--topic` | `string` | `none` | `--topic topics/topics.robust04.301-450.601-700.txt` | the path of the topic file
-| `--topic_format` | `string` | `trec` | `--topic_format trec` | the format of the topic file
-| `--test_split` | `string` | `none` | `--test_split $(pwd)/sample_training_validation_query_ids/robust04_test.txt` | the path to the file with the query ids to use for testing (the docker image is expected to compute the training topic ids which will include all topic ids excluding the ones passed in the test and validation ids files)
-| `--validation_split` | `string` | `none` | `--validation_split $(pwd)/sample_training_validation_query_ids/robust04_validation.txt` | the path to the file with the query ids to use for the model validation (the docker image is expected to compute the training topic ids which will include all topic ids excluding the ones passed in the test and validation ids files)
-| `--model_folder` | `string` | `none` | `--model_folder $(pwd)/output` | the folder to save the model trained by the docker
-| `--qrels` | `string` | `none` | `--qrels $(pwd)/qrels/qrels.robust2004.txt` | the qrels file for evaluation
-| `--gpu` | `boolean` | `False` | `--gpu True` | flag to launch docker with nvidia runtime
-| `--opts` | `[key]=[value] ...` | `none` | `--opts epochs=10` | extra options passed to the search script
 
 
 ### Command Line Options - interact
@@ -147,7 +145,7 @@ The script will be executed as `./init --json <json>`  where the JSON string has
 ```
 
 ### index
-The purpose of the `index` hook is to build the indexes required for the run.
+The purpose of the `index` hook is to build any indexes or other on-disk data structures required for the run.
 
 Before the hook is run, we will mount the document collections at a path passed to the script.
 
@@ -159,7 +157,6 @@ The script will be executed as: `./index --json <json> ` where the JSON string h
     {
       "name": "<name>",              // the collection name
       "path": "/path/to/collection", // the collection path
-      "format": "<format>"           // the collection format (trectext, trecweb, json, warc)
     },
     ...
   ],
@@ -170,17 +167,19 @@ The script will be executed as: `./index --json <json> ` where the JSON string h
 ```
 
 ### train
-The purpose of the `train` hook is to train a retrieval model.
+The purpose of the `train` hook is to train an EDL model.
 
 The script will be executed as: `./train --json <json> ` where the JSON string has the following format:
 ```json5
 {
-  "topic": {
-    "path": "/path/to/topic", // the path to the topic file
-    "format": "trec"          // the format of the topic file
+  "collection": {
+    "name": "<name>"          // the collection name
   },
-  "qrels": {
-    "path": "/path/to/qrel",  // the path to the qrel file
+  "train_split": {
+    "path": "/path/to/split", // the path to the split file
+  },
+  "validation_split": {
+    "path": "/path/to/split",  // the path to the split file
   },
   "model_folder": {
     "path": "/output",  // the path (in the docker image) where the output model folder (passed to the jig) is mounted
@@ -191,8 +190,8 @@ The script will be executed as: `./train --json <json> ` where the JSON string h
 }
 ```
 
-### search
-The purpose of the `search` hook is to perform an ad-hoc retrieval run - multiple runs can be performed by calling `jig` multiple times with different `--opts` parameters.
+### test
+The purpose of the `test` hook is to perform an EDL run - multiple runs can be performed by calling `jig` multiple times with different `--opts` parameters.
 
 The run files are expected to be placed in the `/output` directory such that they can be evaluated externally by `jig` using `trec_eval`.
 
@@ -205,18 +204,16 @@ The script will be executed as `./search --json <json>` where the JSON string ha
   "opts": { // extra options passed to the search script
     "<key>": "<value>"
   },
-  "topic": {
-    "path": "/path/to/topic", // the path to the topic file
-    "format": "trec"          // the format of the topic file
+  "test_split": {
+    "path": "/path/to/split", // the path to the split file
   },
-  "top_k": <int>              // the num of retrieval results for top-k retrieval
 }
 ```
 
-Note: If you're using the `--timings` option for the `search` hook, ensure that the `time` package (or `bash`) is installed in your `Dockerfile`.
+Note: If you're using the `--timings` option for the `test` hook, ensure that the `time` package (or `bash`) is installed in your `Dockerfile`.
 
 ### interact
-The purpose of the `interact` hook is to prepare for user interaction, assuming that any process started by `init` or `index` is gone.
+The purpose of the `interact` hook is to prepare for user interaction, assuming that any process started by `init`, `index`, or `train` is gone.
 
 The script will be executed as `./interact --json <json>` where the JSON string has the following format:
 ```json5
