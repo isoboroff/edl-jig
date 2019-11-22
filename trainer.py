@@ -2,7 +2,6 @@ import json
 import os
 import sys
 
-QRELS_GUEST_PATH = '/output/qrels/qrels.qrel'
 MODELS_GUEST_PATH = '/output'
 
 
@@ -13,7 +12,7 @@ class Trainer:
     def set_config(self, trainer_config):
         self.config = trainer_config
 
-    def train(self, client, topic_path_guest, test_split_path_guest,
+    def train(self, client, train_split_path_guest,
               validation_split_path_guest, generate_save_tag):
         """
         Performs training
@@ -29,17 +28,8 @@ class Trainer:
                 "bind": MODELS_GUEST_PATH,
                 "mode": "rw"
             },
-            os.path.abspath(self.config.topic): {
-                "bind": os.path.join(topic_path_guest, os.path.basename(self.config.topic)),
-                "mode": "ro"
-            },
-            os.path.abspath(self.config.qrels): {
-                "bind": QRELS_GUEST_PATH,
-                "mode": "ro"
-            },
-
-            os.path.abspath(self.config.test_split): {
-                "bind": test_split_path_guest,
+            os.path.abspath(self.config.train_split): {
+                "bind": train_split_path_guest,
                 "mode": "ro"
             },
             os.path.abspath(self.config.validation_split): {
@@ -53,12 +43,11 @@ class Trainer:
                 "name": self.config.collection
             },
             "opts": {key: value for (key, value) in map(lambda x: x.split("="), self.config.opts)},
-            "topic": {
-                "path": os.path.join(topic_path_guest, os.path.basename(self.config.topic)),
-                "format": self.config.topic_format
+            "train_split": {
+                "path": train_split_path_guest
             },
-            "qrels": {
-                "path": QRELS_GUEST_PATH
+            "validation_split": {
+                "path": validation_split_path_guest
             },
             "model_folder": {
                 "path": MODELS_GUEST_PATH
