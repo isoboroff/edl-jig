@@ -22,15 +22,15 @@ class Manager:
         self.client = docker.from_env(timeout=86400)
         self.preparer = Preparer()
         self.trainer = Trainer()
-        self.searcher = Searcher()
+        self.tester = Tester()
         self.interactor = Interactor()
         self.generate_save_tag = lambda tag, save_id: hashlib.sha256((tag + save_id).encode()).hexdigest()
 
     def set_preparer_config(self, preparer_config):
         self.preparer.set_config(preparer_config)
 
-    def set_searcher_config(self, searcher_config):
-        self.searcher.set_config(searcher_config)
+    def set_tester_config(self, tester_config):
+        self.searcher.set_config(tester_config)
 
     def set_trainer_config(self, trainer_config):
         self.trainer.set_config(trainer_config)
@@ -48,10 +48,10 @@ class Manager:
             self.set_trainer_config(trainer_config)
         self.trainer.train(self.client, TRAIN_SPLIT_PATH_GUEST, VALIDATION_SPLIT_PATH_GUEST, self.generate_save_tag)
 
-    def search(self, searcher_config=None):
-        if searcher_config:
-            self.set_searcher_config(searcher_config)
-        self.searcher.search(self.client, OUTPUT_PATH_GUEST, TEST_SPLIT_PATH_GUEST, self.generate_save_tag)
+    def test(self, searcher_config=None):
+        if test_config:
+            self.set_tester_config(tester_config)
+        self.tester.search(self.client, OUTPUT_PATH_GUEST, TEST_SPLIT_PATH_GUEST, self.generate_save_tag)
 
    def interact(self, interactor_config=None):
         if interactor_config:
