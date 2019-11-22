@@ -80,18 +80,15 @@ class Tester:
             print()
 
         # The measure string passed to neleval
-        ### TODO this needs to be updated for NEL
-        measures = " ".join(map(lambda x: "-c -m {}".format(x), self.config.measures))
-
         print("Evaluating results using neleval...")
         for file in os.listdir(self.config.output):
-            if not file.endswith("neleval"):
+            if not file.endswith("nel"):
                 run = os.path.join(self.config.output, file)
                 print("###\n# {}\n###".format(run))
                 try:
-                    result = subprocess.check_output("neleval/nel {} {} {}".format(measures, self.config.qrels, run).split())
+                    result = subprocess.check_output("neleval/nel -m {} -g {} {}".format(self.config.measures, self.config.qrels, run).split())
                     print(result.decode("UTF-8"))
-                    with open("{}.trec_eval".format(run), "w+") as out:
+                    with open("{}.nel".format(run), "w+") as out:
                         out.write(result.decode("UTF-8"))
                 except subprocess.CalledProcessError:
                     print("Unable to evaluate {} - is it a run file?".format(run))

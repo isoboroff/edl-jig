@@ -49,6 +49,9 @@ class Trainer:
             "validation_split": {
                 "path": validation_split_path_guest
             },
+            "gold": {
+                "path": self.config.gold
+            },
             "model_folder": {
                 "path": MODELS_GUEST_PATH
             }

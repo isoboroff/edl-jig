@@ -96,7 +96,8 @@ Options with `none` as the default are required.
 | `--tag` | `string` | `latest` | `--tag latest` | the tag on Docker Hub
 | `--load_from_snapshot` | `string` | `save` | `--load_from_snapshot tac2019-exp1` | used to determine the tag of the snapshotted image to search from
 | `--train_split` | `string` | `none` | `--train_split train_split` | the path to the file listing the files to use for training 
-| `--validation_split` | `string` | `none` | `--validation_split valid_split` | the path to the file listing the files to use for the model validation 
+| `--validation_split` | `string` | `none` | `--validation_split valid_split` | the path to the file listing the files to use for the model validation
+| `--gold` | `string` | `none` | `--gold annotations` | the path to annotations to use for model selection 
 | `--model_folder` | `string` | `none` | `--model_folder $(pwd)/output` | the folder to save the model trained by the docker
 | `--gpu` | `boolean` | `False` | `--gpu True` | flag to launch docker with nvidia runtime
 | `--opts` | `[key]=[value] ...` | `none` | `--opts epochs=10` | extra options passed to the search script
@@ -112,6 +113,7 @@ Options with `none` as the default are required.
 | `--collection` | `string` | `none` | `--collection tac2019` | the collections to index
 | `--load_from_snapshot` | `string` | `save` | `--load_from_snapshot tac2019-exp1` | used to determine the tag of the snapshotted image to search from
 | `--test_split` | `string` | `none` | `--test_split test_split` | the path to the file listing the files to use for testing
+| `--gold` | `string` | `none` | `--gold annotations` | the path to annotations to use for evaluation 
 | `--output` | `string` | `none` | `--output $(pwd)/output` | the output path for run files
 | `--opts` | `[key]=[value] ...` | `none` | `--opts search_args="-bm25"` | extra options passed to the search script
 | `--timings` | `flag` | `false` | `--timings` | print timing info (requires the `time` package, or `bash`, to be installed in Dockerfile)
