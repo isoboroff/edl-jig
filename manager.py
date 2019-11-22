@@ -13,6 +13,7 @@ OUTPUT_PATH_GUEST = "/output"
 
 TEST_SPLIT_PATH_GUEST = '/data/splits/test_split.txt'
 VALIDATION_SPLIT_PATH_GUEST = '/data/splits/validation_split.txt'
+TRAIN_SPLIT_PATH_GUEST = '/data/splits/train_split.txt'
 
 
 class Manager:
@@ -20,8 +21,8 @@ class Manager:
     def __init__(self):
         self.client = docker.from_env(timeout=86400)
         self.preparer = Preparer()
-        self.searcher = Searcher()
         self.trainer = Trainer()
+        self.searcher = Searcher()
         self.interactor = Interactor()
         self.generate_save_tag = lambda tag, save_id: hashlib.sha256((tag + save_id).encode()).hexdigest()
 
@@ -42,17 +43,17 @@ class Manager:
             self.set_preparer_config(preparer_config)
         self.preparer.prepare(self.client, COLLECTION_PATH_GUEST, self.generate_save_tag)
 
-    def search(self, searcher_config=None):
-        if searcher_config:
-            self.set_searcher_config(searcher_config)
-        self.searcher.search(self.client, OUTPUT_PATH_GUEST, TOPIC_PATH_GUEST, TEST_SPLIT_PATH_GUEST, self.generate_save_tag)
-
     def train(self, trainer_config=None):
         if trainer_config:
             self.set_trainer_config(trainer_config)
-        self.trainer.train(self.client, TOPIC_PATH_GUEST, TEST_SPLIT_PATH_GUEST, VALIDATION_SPLIT_PATH_GUEST, self.generate_save_tag)
+        self.trainer.train(self.client, TRAIN_SPLIT_PATH_GUEST, VALIDATION_SPLIT_PATH_GUEST, self.generate_save_tag)
 
-    def interact(self, interactor_config=None):
+    def search(self, searcher_config=None):
+        if searcher_config:
+            self.set_searcher_config(searcher_config)
+        self.searcher.search(self.client, OUTPUT_PATH_GUEST, TEST_SPLIT_PATH_GUEST, self.generate_save_tag)
+
+   def interact(self, interactor_config=None):
         if interactor_config:
             self.set_interactor_config(interactor_config)
         self.interactor.interact(self.client, self.generate_save_tag)
