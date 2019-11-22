@@ -41,6 +41,7 @@ python run.py train \
     --collection [name] \
     --train_split [path] \
     --validation_split [path] \
+	--gold [path] \
     --output /path/to/output
 ```
 
