@@ -4,7 +4,7 @@ import docker
 
 from interactor import Interactor
 from preparer import Preparer
-from searcher import Searcher
+from tester import Tester
 from trainer import Trainer
 
 COLLECTION_PATH_GUEST = "/input/collections/"
@@ -30,7 +30,7 @@ class Manager:
         self.preparer.set_config(preparer_config)
 
     def set_tester_config(self, tester_config):
-        self.searcher.set_config(tester_config)
+        self.tester.set_config(tester_config)
 
     def set_trainer_config(self, trainer_config):
         self.trainer.set_config(trainer_config)
@@ -48,12 +48,12 @@ class Manager:
             self.set_trainer_config(trainer_config)
         self.trainer.train(self.client, TRAIN_SPLIT_PATH_GUEST, VALIDATION_SPLIT_PATH_GUEST, self.generate_save_tag)
 
-    def test(self, searcher_config=None):
-        if test_config:
+    def test(self, tester_config=None):
+        if tester_config:
             self.set_tester_config(tester_config)
-        self.tester.search(self.client, OUTPUT_PATH_GUEST, TEST_SPLIT_PATH_GUEST, self.generate_save_tag)
+        self.tester.test(self.client, OUTPUT_PATH_GUEST, TEST_SPLIT_PATH_GUEST, self.generate_save_tag)
 
-   def interact(self, interactor_config=None):
+    def interact(self, interactor_config=None):
         if interactor_config:
             self.set_interactor_config(interactor_config)
         self.interactor.interact(self.client, self.generate_save_tag)

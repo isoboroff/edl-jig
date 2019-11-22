@@ -58,7 +58,7 @@ class Tester:
         # Time the EDL run
         print("Starting container from saved image...")
 
-        container = client.containers.run("{}:{}".format(self.config.repo, save_tag), command.format(json.dumps(json.dumps(search_args))), volumes=volumes,
+        container = client.containers.run("{}:{}".format(self.config.repo, save_tag), command.format(json.dumps(json.dumps(test_args))), volumes=volumes,
                                           detach=True, runtime=runtime)
 
         test_times = []
