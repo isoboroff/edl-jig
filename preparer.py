@@ -25,6 +25,10 @@ class Preparer:
         (`collection_name`). This argument maps into the path
         `/input/collection/collection_name`, where the container can
         expect the document collection to be mounted.
+
+        The term `index` comes from this jig's history as an IR tool.  Systems
+        should feel free to create any persistent data structures they want
+        stored with the docker image.
         """
 
         print("Preparing image...")
