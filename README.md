@@ -30,7 +30,7 @@ To test the jig with a simple demo image using default parameters, first obtain 
 ```
 python run.py prepare \
     --repo isoboroff/edl-jig-test \
-    --collections [name]=[path] ...
+    --collections [name]=[path]=[format] ...
 ```
 
 then
@@ -79,7 +79,7 @@ Options with `none` as the default are required.
 | --- | --- | --- | --- | ---
 | `--repo` | `string` | `none` | `--repo isoboroff/edl-jig-test` | the repo on Docker Hub
 | `--tag` | `string` | `latest` | `--tag latest` | the tag on Docker Hub
-| `--collections` | `[name]=[path] ...` | `none` | `--collections tac2019=/path/to/tac2019 ...` | the collections to use
+| `--collections` | `[name]=[path]=[format] ...` | `none` | `--collections tac2019=/path/to/tac2019=tac ...` | the collections to use
 | `--save_to_snapshot` | `string` | `save` | `--save_to_snapshot tac2019-exp1` | used to determine the tag of the snapshotted image after indexing
 | `--opts` | `[key]=[value] ...` | `none` | `--opts index_args="-storeRawDocs"` | extra options passed to the index script
 | `--version` | `string` | `none` | `--version 3b16584a7e3e7e3b93642a95675fc38396581bdf` | the version string passed to the init script
