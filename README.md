@@ -36,9 +36,11 @@ python run.py prepare \
 then
 
 ```
-python run.py edl \
+python run.py train \
     --repo isoboroff/edl-jig-test \
     --collection [name] \
+    --train_split [path] \
+    --validation_split [path] \
     --output /path/to/output
 ```
 
@@ -128,7 +130,7 @@ Options with `none` as the default are required.
 
 # Docker Container Contract
 
-Currently we support four hooks: `init`, `index`, `search`,and `interact`. We expect `search` or `interact` to be called after `init` and `index`. We also expect these four executables to be located in the root directory of the container.
+Currently we support four hooks: `init`, `index`, `train`, `test`,and `interact`. We expect `train`; `test` or `interact` to be called after `init` and `index`. We also expect these five executables to be located in the root directory of the container.
 
 Each script is executed with the interpreter determined by the shebang so you can use  `#!/usr/bin/env bash`, `#!/usr/bin/env python3`, etc - just remember to make sure your `Dockerfile` is built with the appropriate base image or the required dependencies are installed. 
 
